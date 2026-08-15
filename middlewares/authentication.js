@@ -9,7 +9,7 @@ function checkForAuthenticationCookie(cookieName){
     return (req,res , next) => {
         const tokenCookieValue = req.cookies[cookieName];
         if(!tokenCookieValue){
-        next();   // we call next function
+         return next();   // we call next function
         }
 
     try {
@@ -17,7 +17,7 @@ function checkForAuthenticationCookie(cookieName){
         req.user = userPayload;
         
         }catch(error){}
-        next();
+         return next();
     };
     
     

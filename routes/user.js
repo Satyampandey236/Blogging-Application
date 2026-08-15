@@ -28,6 +28,10 @@ router.post("/signin", async(req,res) =>{
     }
 });
 
+//logout  : we need to delete cookies only for logout
+router.get("/logout",(req,res)=>{
+    res.clearCookie("token").redirect("/");
+})
 
 
 //signup

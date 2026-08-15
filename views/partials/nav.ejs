@@ -19,9 +19,10 @@
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
 
-        <!-- Add Blog -->
-        <li class="nav-item">
-          <a class="nav-link" href="#">Add Blog</a>
+        <!-- Add Blog :   ham add blog tabhi show karange jab user login ho -->
+        <% if (locals.user) { %>
+          <li class="nav-item">
+          <a class="nav-link" href="/blog/add-new">Add Blog</a>
         </li>
 
         <!-- Dropdown: Piyush Garg -->
@@ -31,10 +32,21 @@
             Piyush Garg
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
           </ul>
         </li>
       </ul>
+        <% } else {%> 
+
+          <li class="nav-item">
+          <a class="nav-link" href="/user/signup">Creat Account</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link" href="/user/signin">Signin</a>
+        </li>
+        <%} %>
+
+        
 
       <!-- Optional Search -->
       <form class="d-flex" role="search">
