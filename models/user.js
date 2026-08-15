@@ -2,6 +2,7 @@ const { createHmac,randomBytes} = require('crypto');         // import crypto ha
 const { create } = require('domain');
 
 const { Schema, model} = require("mongoose");
+const { createTokenForUser } = require('../services/authentication');
 
 const userSchema = new Schema({
     fullName: {
@@ -51,14 +52,14 @@ const userSchema = new Schema({
 // });
 
 //signup
-userSchema.pre("save", function () {
+userSchema.pre("save", function () {    // presave means : Before a User document is saved into MongoDB, run this function first.
     const user = this;
 
     if (!user.isModified("password")) return;
 
-    const salt = randomBytes(16).toString("hex");
+    const salt = randomBytes(16).toString("hex");     //A salt is a random value added to the hashing process.salt makes password hashes harder to attack.
 
-    const hashedPassword = createHmac("sha256", salt)
+    const hashedPassword = createHmac("sha256", salt)   //password + salt ->   SHA-256 -hash value
         .update(user.password)
         .digest("hex");
 
@@ -67,7 +68,7 @@ userSchema.pre("save", function () {
 });
 
 //signin
-userSchema.static('matchPassword',async function(email, password){
+userSchema.static('matchPasswordAndGenerateToken',async function(email, password){
     const user = await this.findOne({email});
     if(!user) throw new Error("User not found!");
 
@@ -81,8 +82,11 @@ userSchema.static('matchPassword',async function(email, password){
     if(hashedPassword !== userProvidedHash)
       throw new Error("Incorrect Password");
 
-    return { ...user._doc ,password:undefined, salt: undefined};    // else ham user object ko return kar denge.
-    return user;
+    //return { ...user._doc ,password:undefined, salt: undefined};    // else ham user object ko return kar denge.
+    //return user;
+
+    const token = createTokenForUser(user);
+    return token;
 });
 
 
@@ -110,3 +114,22 @@ userSchema.static('matchPassword',async function(email, password){
 
 const User = model('user', userSchema);
 module.exports = User;
+
+
+
+
+
+
+
+
+
+
+// Now the generated salt is stored in the user's document.
+
+// Your database might conceptually look like:
+
+// {
+//     email: "satyam@gmail.com",
+//     password: "8f4a...hashed...",
+//     salt: "abc789..."
+// }

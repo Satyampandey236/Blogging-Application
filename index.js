@@ -2,8 +2,10 @@ const path = require("path");
 
 const express = require("express");
 const mongoose = require("mongoose");
+const cookiePaser = require('cookie-parser');
 
-const userRoute = require('./routes/user')
+const userRoute = require('./routes/user');
+const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 
 const app = express();
 
@@ -33,14 +35,18 @@ app.set("views",path.resolve("./views"));
 
 
 app.use(express.urlencoded ({extended:false}));             // Parses HTML form data and makes it available in req.body.
+app.use(cookiePaser());   // cookie parse
+app.use(checkForAuthenticationCookie("token"))   // middleware    // tokenn is the name of cookie 
 
 
 //route
 app.get('/', (req, res)=>{
-    res.render("home");
+    res.render("home",{
+     user: req.user,                       // here we pass user object
+    });
 });
 
-app.use('/user',userRoute);
+app.use('/user',userRoute);   ///user as a base path/prefix for all routes inside userRoute
 
 app.listen(PORT, ()=> console.log(`Server Started at PORT:${PORT}`));
 
