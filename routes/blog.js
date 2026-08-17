@@ -4,6 +4,9 @@ const {Router} = require("express");
 
 const multer = require('multer');
 const path = require('path');
+
+const Blog = require('../models/blog')
+
 const router = Router();
 
 
@@ -31,10 +34,18 @@ router.get("/add-new", (req, res)=> {
 //we use multer for  multer for file   : npm i multer ; open documentatio of multer.
 // POST ROUTE   // and action on form after witten this
 
-router.post("/",upload.single('coverImage'),(req,res) => {
-    console.log(req.body);
-    console.log(req.file);
-    return res.redirect("/");
+router.post("/",upload.single('coverImage'),async(req,res) => {
+    // console.log(req.body);
+    // console.log(req.file);
+    const {title,body} = req.body
+    const blog = await Blog.create({       // its create blog for us .
+        body,
+        title,
+        createdBy: req.user._id,
+        coverImageURL: `/uploads/${req.file.filename}`
+
+    });
+    return res.redirect(`/blog/${blog._id}`);
 });
 
 

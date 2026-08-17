@@ -4,6 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookiePaser = require('cookie-parser');
 
+//import blog
+const Blog = require('./models/blog')
+
 const userRoute = require('./routes/user');
 const blogRoute = require("./routes/blog");
 
@@ -40,12 +43,15 @@ app.set("views",path.resolve("./views"));
 app.use(express.urlencoded ({extended:false}));             // Parses HTML form data and makes it available in req.body.
 app.use(cookiePaser());   // cookie parse
 app.use(checkForAuthenticationCookie("token"))   // middleware    // tokenn is the name of cookie 
-
+// for image
+app.use(express.static(path.resolve('./public')))     // its means public folder maie jo bhi  hai usee statically serve kar do.
 
 //route
-app.get('/', (req, res)=>{
+app.get('/', async(req, res)=>{
+    const allBlog = await Blog.find({});
     res.render("home",{
      user: req.user,                       // here we pass user object
+     blogs: allBlog,
     });
 });
 
