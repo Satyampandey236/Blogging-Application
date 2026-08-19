@@ -31,6 +31,14 @@ router.get("/add-new", (req, res)=> {
     });
 });
 
+//router
+router.get('/:id', async(req,res) => {
+    const blog = await Blog.findById(req.params.id)
+})
+
+
+
+
 //we use multer for  multer for file   : npm i multer ; open documentatio of multer.
 // POST ROUTE   // and action on form after witten this
 
