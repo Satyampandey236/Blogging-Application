@@ -11,6 +11,55 @@
             <img src="<%= blog.coverImageURL %>" width="700px"  />
             <pre><%= blog.body %></pre>
         </div>
+
+
+<!-- we use this kui ki ham caahte hai ki blog jisne bhi likha hai uska profile img and name show ho down me : iske help sy createdBy: ObjectId -->
+
+        <div class="container mt-4">
+            <img src="<%= blog.createdBy.profileImageURL %>" width="50px"> <%= 
+            blog.createdBy.fullName %>
+        </div>
+
+
+        <!-- We create form for comments -->
+        <div class="container mt-3">
+            <h1> Comments (<%= comments.length %>)</h1>
+
+
+
+
+
+<%# locals contains all values passed from the Express route via res.render() %>
+            <!-- Hamne iss form ko if condition me rakh kar locals.user condition kar diya kui ki user tabhi commnent kar paye jab user login ho.   locals is a object , if we not use locals t  , suppose user ki place per ek age hota , or age hmara variavle defined nhi hai , toh error ataa but local use karne per nhi ayagea. inside local sare value unvariable . hoti hai -->
+             <!-- // agr current user logedin hai tabhi ye form render karunaga. -->
+            <% if (locals.user) { %>     
+             <form action="/blog/comment/<%= blog._id %>" method="post">
+               <div class="mb-3">
+                 <input
+                  type="text"
+                  name="content"
+                  class="form-control"
+                  placeholder=""Enter you comment 
+                /> 
+                <button class=" btn btn-sm btn-primary"   type="submit">Add</button>
+               </div> 
+            </form>
+
+            
+
+        <% } %>
+            <!-- ye comments wala code isliye if elase condition ke bahar kar diye kui ki comments koi bhi dhke sake. -->
+        <div class="mt-3">
+                <% comments.forEach(comment => { %>
+                    <div>
+                        <img src="<%= comment.createdBy.profileImageURL %>" width="50px" />
+                        <%= comment.createdBy.fullName %>
+                        <pre><%= comment.content %></pre>
+                    </div>
+                    <% }) %>
+                    </div>
+        </div>
+
         <%- include('./partials/scripts')  %>
     </body>
 </html>
