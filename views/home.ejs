@@ -1,40 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('./partials/head')%>
+    <%- include('./partials/head') %>
     <title>Homepage</title>
 </head>
 <body>
-    <%- include('./partials/nav')%>
-     <%# JSON.stringify(blogs) %>          <!-- iss current user ko navebar me  rkhna hai. -->
+    <%- include('./partials/nav') %>
 
-    <div class="container mt -3">
+    <%# JSON.stringify(blogs) %>   <!-- iss current user ko navbar me rakhna hai -->
 
-        <% blogs.forEach(blog => { %>
-             <!-- we wants to render a card -->
-
-   <div class="card" style="width: 18rem;">
-        <img src="<%= blog.coverImageURL %>" class="card-img-top">
-        <div class="card-body">
-         <h5 class="card-title"><%= blog.tittle %></h5>
-            
-            <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+    <div class="container mt-3">
+        <div class="row">
+            <% blogs.forEach(blog => { %>
+                <!-- Render each blog as a card inside a column -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="Blog Cover">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= blog.title %></h5>
+                            <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
     </div>
-</div>
 
-        <% }) %>
-    </div>
-    <%- include('./partials/scripts')  %>
+    <%- include('./partials/scripts') %>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
